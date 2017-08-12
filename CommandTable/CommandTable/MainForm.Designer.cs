@@ -39,7 +39,7 @@
             this.MainWebBrowser.Name = "MainWebBrowser";
             this.MainWebBrowser.Size = new System.Drawing.Size(1002, 712);
             this.MainWebBrowser.TabIndex = 0;
-            this.MainWebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
+            this.MainWebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.MainBrowser_DocumentCompleted);
             // 
             // MainForm
             // 
