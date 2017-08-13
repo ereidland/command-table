@@ -45,16 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainForm.cs">
+    <Compile Include="source\CommandModule.cs" />
+    <Compile Include="source\Log.cs" />
+    <Compile Include="source\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="source\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="StringPipe.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="source\RunProcessCommandModule.cs" />
+    <Compile Include="source\SimpleJSON.cs" />
+    <Compile Include="source\StringPipe.cs" />
+    <Compile Include="source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="source\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
