@@ -8,13 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using SimpleJSON;
 
 namespace CommandTable
 {
     public partial class MainForm : Form
     {
+        CommandTableController _controller;
+        
         public MainForm()
         {
+            _controller = new CommandTableController();
+            _controller.RegisterCommand("log", new SynchronousFunctionCommandModule(WriteLogCommand));
+            _controller.RegisterCommand("run", new RunProcessCommandModule());
+
             InitializeComponent();
         }
 
@@ -28,16 +35,64 @@ namespace CommandTable
             MainWebBrowser.Document.InvokeScript(SendMessageCommand, _sizeOneArray);
         }
 
+        void WaitForTask(object taskObject)
+        {
+            var task = taskObject as Task<JSONNode>;
+            if (task == null)
+                return;
+            
+            while (!task.IsCompleted)
+                return;
+        }
+
         void ReceiveMessage(string message)
         {
-            MessageBox.Show("Host received: " + message);
-            SendMessage("Echo: " + message);
+            Log.Message(Log.Level.Debug, "Host received: " + message);
+
+            try
+            {
+                JSONNode command = JSON.Parse(message);
+
+                //TODO: Handle this returned task and do something with it.
+                var task = _controller.RunCommand(command);
+
+                if (task != null)
+                {
+                    var waitTask = new Task(WaitForTask, task);
+                    waitTask.Start();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.MessageFormat(Log.Level.Exception, "Exception: {0}", ex.ToString());
+            }
+        }
+
+        //So javascript can call our log function.
+        JSONNode WriteLogCommand(JSONNode node)
+        {
+            if (node == null)
+                return null;
+
+            var message = node["message"];
+            if (message == null)
+                return null;
+
+            Log.Message(Log.Level.Info, message);
+            return null;
         }
 
         void WriteLog(Log.Level level, string message)
         {
-            string logPrefix = string.Format("[{0}]", level);
-            LogBox.AppendText(string.Format("{0:10} {1}\n", logPrefix, message));
+            if (level == Log.Level.Raw)
+            {
+                LogBox.AppendText(message);
+            }
+            else
+            {
+                string logPrefix = string.Format("[{0}]", level);
+                LogBox.AppendText(string.Format("{0:10} {1}\n", logPrefix, message));
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -72,11 +127,6 @@ namespace CommandTable
         }
 
         private void MainBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-
-        }
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
         {
 
         }

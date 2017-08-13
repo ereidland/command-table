@@ -6,6 +6,7 @@ namespace CommandTable
     {
         public enum Level
         {
+            Raw,
             Debug,
             Info,
             Warning,

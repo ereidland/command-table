@@ -60,7 +60,6 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LogBox);
-            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(1002, 712);
             this.splitContainer1.SplitterDistance = 626;
             this.splitContainer1.TabIndex = 1;
