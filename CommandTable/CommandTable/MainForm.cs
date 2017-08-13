@@ -18,8 +18,26 @@ namespace CommandTable
             InitializeComponent();
         }
 
+        const string SendMessageCommand = "ReceiveMessage";
+
+        string[] _sizeOneArray = new string[1];
+
+        void SendMessage(string message)
+        {
+            _sizeOneArray[0] = message;
+            MainWebBrowser.Document.InvokeScript(SendMessageCommand, _sizeOneArray);
+        }
+
+        void ReceiveMessage(string message)
+        {
+            MessageBox.Show("Host received: " + message);
+            SendMessage("Echo: " + message);
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
+            MainWebBrowser.ObjectForScripting = new StringPipe(SendMessage, ReceiveMessage);
+
             string basePath = Directory.GetCurrentDirectory();
 
             const string ModuleFolder = "Modules";
